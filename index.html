@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha generator</title>
+    <style>
+         * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  height: 100vh;
+  background: linear-gradient(#eee6e6, #cd42fb);
+}
+.container
+{
+    height: 20em;
+    width: 32em;
+    background-color: white;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+    border-radius: 8px;
+    
+    box-shadow: 5px 5px 5px gray;
+    padding: 5em;
+}
+#canvas
+{
+    
+    border: 2px solid black;
+    border-radius: 8px;
+}
+.wrapper
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px;
+}
+button#refresh
+{
+    padding:17px;
+    background-color: #d76efa;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px rgb(109, 106, 106) ;
+    cursor: pointer;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.8em;
+}
+#user_input
+{
+    width: 100%;
+    padding: 0.7em;
+    margin-bottom: 1em;
+}
+button#submit
+{
+    width: 100%;
+    padding: 1em;
+    background-color: #d76efa;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 5px 5px 5px rgb(109, 106, 106) ;
+    cursor: pointer;
+    font-family: 'Times New Roman', Times, serif;
+    font-size:1em;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper">
+           <canvas id="canvas" height="50" width="200"></canvas>
+            <button id="refresh" class="button">Refresh</button>
+        </div>
+        <input type="text" id="user_input" placeholder="Enter The Above Captcha">
+        <button id="submit">Submit</button>
+    </div>
+</body>
+<script>
+let canvas = document.getElementById("canvas");
+let refresh_btn = document.getElementById("refresh");
+let user_input = document.getElementById("user_input");
+let submit_btn = document.getElementById("submit");
+let generatedText = ""; // Declare generatedText globally
+
+function generate_string() {
+    generatedText = ""; // Reset the global variable
+    for (let i = 0; i < 3; i++) {
+        generatedText += String.fromCharCode(random(65, 90)); //generate random char from A-Z
+        generatedText += String.fromCharCode(random(97, 122)); // generate random char from a-z
+        generatedText += String.fromCharCode(random(48, 57)); //generate random char from 0-9
+    }
+    return generatedText;
+}
+
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function drawTextOnCanvas(text) {
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous content
+    ctx.font = "20px Arial"; // Set the font size and type
+    ctx.fillStyle = "black"; // Set the text color
+    ctx.textAlign = "center"; // Center the text horizontally
+    ctx.textBaseline = "middle"; // Center the text vertically
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2); // Draw the text on the canvas
+}
+
+function refresh_trigger() {
+    let generatedText = generate_string();
+    drawTextOnCanvas(generatedText);
+}
+
+refresh_btn.addEventListener("click", function () {
+    refresh_trigger();
+});
+
+submit_btn.addEventListener("click", () => {
+    if (user_input.value === generatedText) {
+        alert("Success");
+        user_input.value="";
+    } else {
+        alert("Wrong");
+        user_input.value="";
+    }
+    refresh_trigger();
+});
+refresh_trigger();
+
+</script>
+</html>
